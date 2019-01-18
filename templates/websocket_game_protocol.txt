@@ -1,0 +1,16 @@
+key:value
+
+# 玩家位置:playerID | localPosition | localRotation | localScale
+transform:0|1.2,1.2,1.2|0,0,0|1,1,1
+
+# 聊天訊息
+chat:hahaha
+
+# 子彈位置:發射者playerID | 子彈ID | localPosition | localRotation | localScale
+bullet:0|1.2,1.2,1.2|0,0,0|1,1,1
+
+# 子彈打到玩家:子彈ID | 玩家ID
+hit_player:0|12
+
+# 銷毀子彈:子彈ID
+del_bullet:0
