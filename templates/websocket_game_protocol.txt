@@ -1,16 +1,42 @@
-key:value
+(to server) 單向送給server收
+(to client) 單向送給client收
+(both) 雙向收送
 
-# 玩家位置:playerID | localPosition | localRotation | localScale
-transform:0|1.2,1.2,1.2|0,0,0|1,1,1
+# (to client) 連線完成:socket_id
+socket_open:0
 
-# 聊天訊息
+# (to server) 玩家上線:玩家姓名|玩家血量|localPosition|localRotation|localScale
+player_join:大中天|10|1.2,1.2,1.2|0,0,0|1,1,1
+
+# (to client) 玩家上線完成:玩家id|玩家姓名|玩家血量|localPosition|localRotation|localScale
+player_join_done:0|大中天|10|1.2,1.2,1.2|0,0,0|1,1,1
+
+# (to server) 玩家離線:玩家id
+player_leave:0
+
+# (to client) 玩家離線完成:玩家id
+player_leave_done:0
+
+# (both) 更新玩家位置:玩家id|localPosition|localRotation|localScale
+player_transform:0|1.2,1.2,1.2|0,0,0|1,1,1
+
+# (both) 聊天訊息
 chat:hahaha
 
-# 子彈位置:發射者playerID | 子彈ID | localPosition | localRotation | localScale
-bullet:0|1.2,1.2,1.2|0,0,0|1,1,1
+# (to server) 發射子彈:玩家id|子彈傷害
+create_bullet:0|1
 
-# 子彈打到玩家:子彈ID | 玩家ID
-hit_player:0|12
+# (to client) 發射子彈完成:玩家id|子彈id|子彈傷害
+create_bullet_done:0|0|1
 
-# 銷毀子彈:子彈ID
+# (both) 更新子彈位置:子彈id|localPosition|localRotation|localScale
+bullet_transform:0|1.2,1.2,1.2|0,0,0|1,1,1
+
+# (to server) 子彈銷毀:子彈id
 del_bullet:0
+
+# (to client) 子彈銷毀完成:子彈id
+del_bullet_done:0
+
+# (both) 子彈擊中玩家:子彈id:被擊中的玩家|造成傷害
+bullet_hit_player:0|1|1

@@ -8,11 +8,27 @@
         function onLoad() {
             ws = new WebSocket("ws://127.0.0.1:8080/websocket");
             ws.onopen = function () {
-              ws.send("connected")
+              console.log("connected")
             };
             ws.onmessage = function(e) {
-               //alert(e.data);
-               console.log(e.data)
+                //alert(e.data);
+                var recv_data = e.data;
+                console.log("raw message=" + recv_data);
+
+                // var data_split = new Array();
+                // data_split = recv_data.split(":");
+
+                // var cmd = data_split[0]
+                // var data = data_split[1]
+
+                // if (cmd == "socket_open")
+                // {
+                //     ws.send("player_join:大中天|10|2,2,2|0,0,0|1,1,1")
+                // }
+                // else if (cmd == "player_join_done")
+                // {
+                //     console.log("player join complete")
+                // }
             };
         }
 
