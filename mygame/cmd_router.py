@@ -104,7 +104,7 @@ class CmdRouter(object):
         logging.debug('连接成功时调用 socket_id {} open()'.format(websocket.socket_id))
 
     def __on_websocket_message(self, websocket, message):
-        logging.debug('接受client发来的消息时调用 socket_id {} on_message()'.format(websocket.socket_id, message))
+        logging.debug('接受client发来的消息时调用 socket_id {} on_message() {}'.format(websocket.socket_id, message))
         self.route_client_message(websocket, message)
 
     def __on_websocket_close(self, websocket):

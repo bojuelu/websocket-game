@@ -5,8 +5,8 @@
 # (to client) 連線完成:socket_id
 socket_open:0
 
-# (to server) 玩家上線:玩家姓名|玩家血量|localPosition|localRotation|localScale
-player_join:大中天|10|1.2,1.2,1.2|0,0,0|1,1,1
+# (to server) 玩家上線:玩家id|玩家姓名|玩家血量|localPosition|localRotation|localScale
+player_join:0|大中天|10|1.2,1.2,1.2|0,0,0|1,1,1
 
 # (to client) 玩家上線完成:玩家id|玩家姓名|玩家血量|localPosition|localRotation|localScale
 player_join_done:0|大中天|10|1.2,1.2,1.2|0,0,0|1,1,1

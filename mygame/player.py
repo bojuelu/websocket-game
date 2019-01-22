@@ -3,9 +3,9 @@ import traceback
 
 
 class Player(object):
-    def __init__(self, websocket, name, hp, pos_str, rot_str, sca_str):
+    def __init__(self, websocket, player_id, name, hp, pos_str, rot_str, sca_str):
         self.websocket = websocket
-        self.player_id = 0
+        self.player_id = player_id
 
         self.name = 'unknow'
         self.hp = 0.0

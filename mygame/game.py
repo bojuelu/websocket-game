@@ -17,6 +17,7 @@ class Game(object):
         self.player_dict = {}
 
         self.cmd_router.register_cmd_handler(Cmd.player_join, self.recv_player_join)
+        self.cmd_router.register_cmd_handler(Cmd.player_transform, self.recv_player_transform)
         pass
 
     def listen_websocket_events(self):
@@ -24,22 +25,28 @@ class Game(object):
         WebsocketGlobalArgs.event_websocket_onclose.append(self.__on_websocket_close)
         pass
 
+    def send_socket_opened(self, websocket):
+        socket_id = websocket.socket_id
+        msg = '{}:{}'.format(Cmd.socket_open, socket_id)
+        self.cmd_router.send_message(socket_id, msg)
+
     def recv_player_join(self, websocket, data):
         data = str(data)
         data_split = data.split('|')
-        player_name = data_split[0]
-        player_hp = data_split[1]
-        player_position = data_split[2]
-        player_rotation = data_split[3]
-        player_scale = data_split[4]
+        player_id = data_split[0]
+        player_name = data_split[1]
+        player_hp = data_split[2]
+        player_position = data_split[3]
+        player_rotation = data_split[4]
+        player_scale = data_split[5]
         self.create_player(
-            websocket, player_name, player_hp, player_position, player_rotation, player_scale)
+            websocket, player_id, player_name, player_hp, player_position, player_rotation, player_scale)
 
     def create_player(
-            self, websocket, player_name, player_hp, pos_str, rot_str, sca_str
+            self, websocket, player_id, player_name, player_hp, pos_str, rot_str, sca_str
     ):
         new_player = Player(
-            websocket, player_name, player_hp, pos_str, rot_str, sca_str)
+            websocket, player_id, player_name, player_hp, pos_str, rot_str, sca_str)
         self.player_dict[new_player.player_id] = new_player
         self.send_player_join_done(
             new_player.player_id, new_player.name, new_player.hp, pos_str, rot_str, sca_str)
@@ -51,10 +58,17 @@ class Game(object):
             Cmd.player_join_done, player_id, player_name, player_hp, pos_str, rot_str, sca_str)
         self.cmd_router.broadcast_message(msg)
 
+    def recv_player_transform(self, websocket, data):
+        # 玩家id|localPosition|localRotation|localScale
+        data = str(data)
+        self.forward_player_transform(data)
+
+    def forward_player_transform(self, data):
+        msg = '{}:{}'.format(Cmd.player_transform, data)
+        self.cmd_router.broadcast_message(msg)
+
     def on_socket_open(self, websocket):
-        socket_id = websocket.socket_id
-        msg = '{}:{}'.format(Cmd.socket_open, socket_id)
-        self.cmd_router.send_message(socket_id, msg)
+        self.send_socket_opened(websocket)
 
     def on_socket_close(self, websocket):
         player_id = websocket.socket_id
