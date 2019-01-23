@@ -6,10 +6,6 @@ import tornado.web
 import tornado.websocket
 import tornado.ioloop
 
-from utility.misc import WebsocketGlobalArgs
-from mygame.cmd_router import CmdRouter
-from mygame.game import Game
-
 
 class IndexPageHandler(tornado.web.RequestHandler):
     def get(self):
@@ -19,28 +15,19 @@ class IndexPageHandler(tornado.web.RequestHandler):
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def __init__(self, application, request, **kwargs):
         super(WebSocketHandler, self).__init__(application, request, **kwargs)
-        self.socket_id = WebsocketGlobalArgs.SOCKET_ID
-        WebsocketGlobalArgs.SOCKET_ID += 1
-
-        for func in WebsocketGlobalArgs.event_websocket_init:
-            func(self)
+        pass
 
     def open(self):
-        # self.set_nodelay(True)
-        WebsocketGlobalArgs.websockets[self.socket_id] = self
-
-        for func in WebsocketGlobalArgs.event_websocket_open:
-            func(self)
+        self.set_nodelay(True)
+        logging.debug('open()')
+        self.write_message("open")
 
     def on_message(self, message):
-        for func in WebsocketGlobalArgs.event_websocket_onmessage:
-            func(self, message)
+        logging.debug('on_message() {}'.format(message))
+        self.write_message(message, True)
 
     def on_close(self):
-        WebsocketGlobalArgs.websockets.pop(self.socket_id)
-
-        for func in WebsocketGlobalArgs.event_websocket_onclose:
-            func(self)
+        logging.debug('on_close()')
 
 
 class Application(tornado.web.Application):
@@ -65,12 +52,6 @@ def start_server(app):
     app.run()
 
 
-def start_game(game):
-    asyncio.set_event_loop(asyncio.new_event_loop())
-    game.run()
-    pass
-
-
 if __name__ == '__main__':
     logging.basicConfig(level=logging.NOTSET)
 
@@ -81,16 +62,4 @@ if __name__ == '__main__':
     ws_thread.start()
     logging.debug('websocket app start')
 
-    # create cmd router
-    cmd_router = CmdRouter()
-    cmd_router.listen_websocket_events()
-
-    # create game entry
-    mygame = Game(cmd_router)
-    mygame.listen_websocket_events()
-    mygame_thread = threading.Thread(target=start_game, args=(mygame, ))
-    mygame_thread.daemon = True
-    mygame_thread.start()
-
     ws_thread.join()
-    mygame_thread.join()

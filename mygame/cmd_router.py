@@ -90,12 +90,14 @@ class CmdRouter(object):
     def send_message(self, socket_id, message):
         if socket_id in self.websockets:
             self.websockets[socket_id].write_message(message)
+            logging.debug('發送給單個client消息 socket_id={} message={}'.format(socket_id, message))
         else:
             logging.error('socket_id not exist. {}'.format(socket_id))
 
     def broadcast_message(self, message):
         for socket_id in self.websockets:
             self.websockets[socket_id].write_message(message)
+        logging.debug('發送給所有client消息 message={}'.format(message))
 
     def __on_websocket_init(self, websocket):
         logging.debug('初始化完成时调用  socket_id {} init()'.format(websocket.socket_id))
